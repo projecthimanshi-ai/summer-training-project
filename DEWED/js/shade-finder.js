@@ -1,0 +1,10 @@
+const DEPTH=["Fair","Light","Medium","Tan","Deep","Rich"],TONE=["Cool","Neutral","Warm","Olive"],FIN={Matte:3,Satin:2,Dewy:4};
+const SHADE_HEX={Fair:"#ecd0b8",Light:"#e0b894",Medium:"#c99a72",Tan:"#aa7550",Deep:"#7c4e34",Rich:"#573525"};
+(function(){const el=$("#sfApp");if(!el)return;const s={d:null,t:null,f:null};
+ const grp=(k,arr,l)=>`<p class="sm">${l}</p><div class="opts" data-k="${k}">${arr.map(a=>`<button class="opt" aria-pressed="false">${a}</button>`).join("")}</div>`;
+ el.querySelector(".in").innerHTML=grp("d",DEPTH,"Skin depth")+grp("t",TONE,"Undertone")+grp("f",Object.keys(FIN),"Finish you love");
+ el.addEventListener("click",e=>{const b=e.target.closest(".opt");if(!b)return;const g=b.parentNode;$$(".opt",g).forEach(o=>o.setAttribute("aria-pressed","false"));b.setAttribute("aria-pressed","true");s[g.dataset.k]=b.textContent;show()});
+ function show(){const o=$("#sfout");if(!(s.d&&s.t&&s.f))return;const fo=PRODUCTS.filter(p=>p.type==="Foundation"&&p.finish===s.f)[0]||PRODUCTS.find(p=>p.type==="Foundation");
+  const n=DEPTH.indexOf(s.d)*4+TONE.indexOf(s.t)+1,code=`${s.d} ${DEPTH.indexOf(s.d)+1}${s.t[0]}`;
+  o.innerHTML=`<div class="sw" style="background:${SHADE_HEX[s.d]}"></div><p class="sm">Your match</p><h3>${fo.name}</h3><p>Shade <b>${code}</b> (${s.t.toLowerCase()} undertone, ${s.f.toLowerCase()} finish)</p><p>${inr(fo.price)}</p><div><button class="btn dark" id="sfAdd">Add to bag</button> <a class="btn" href="product.html?id=${fo.id}">View product</a></div><p class="meta">A shopping guide, not a skin analysis.</p>`;
+  $("#sfAdd").onclick=()=>cart.add(fo.id,1,code)}})();
